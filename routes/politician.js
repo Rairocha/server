@@ -10,7 +10,7 @@ router.get('/all-politicians',(req, res, next) =>{
      Politician.find()//{in_office: true}).sort({id: 1})
     .then((allP)=>{
         res.json(allP)
-        console.log('Politicians return', allP.length)
+        //console.log('Politicians return', allP.length)
     })
     .catch((err)=>{
         console.log(err)

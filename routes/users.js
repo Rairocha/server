@@ -48,16 +48,23 @@ router.post('/user-update/:userId', /*isAuthenticated, isProfileOwner,*/ (req, r
 })
 
 router.post('/follow/:polId', isLoggedIn, (req, res, next) => {
-  const userId = req.body._id
+  const userId = req.user._id
   const polId = req.params.polId;
   
-  User.findById(userId)
-  .then((userToEdit)=>{
-    const listFollowing = userToEdit.following.map((id)=>{return id.toString()});
-    listFollowing.push(polId);
-    userToEdit.following = [... new Set(listFollowing)].map((id)=>{return new mongoose.Types.ObjectId(id)});
-    return userToEdit.save()
+  User.findByIdAndUpdate(userId, {$push : {following: polId}},{new:true})
+  .then((updatedUser)=>{
+    res.json(updatedUser)
   })
+  .catch((err) => {
+    console.log(err)
+    next(err)})
+});
+
+router.post('/unfollow/:polId', isLoggedIn, (req, res, next) => {
+  const userId = req.user._id
+  const polId = req.params.polId;
+  
+  User.findByIdAndUpdate(userId, {$pull : {following: polId}},{new:true})
   .then((updatedUser)=>{
     res.json(updatedUser)
   })
@@ -67,10 +74,9 @@ router.post('/follow/:polId', isLoggedIn, (req, res, next) => {
 });
 
 router.get('/following',isLoggedIn, (req, res, next) => {
-  const userId = req.body._id
+  const userId = req.user._id
   User.findById(userId)
   .then((following)=>{
-    console.log('backend get ',following)
     res.json(following)
   })
   .catch((err) => {
