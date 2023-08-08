@@ -43,10 +43,10 @@ router.post("/signup", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      User.create({ email, password: hashedPassword, fullName, username })
+      User.create({ email, password: hashedPassword, fullName, username , following:[] })
         .then((createdUser) => {
 
-          const { email, _id, fullName, username  } = createdUser;
+          const { email, _id, fullName, username,follolwing  } = createdUser;
 
           const payload = { email, _id, fullName,  username };
 

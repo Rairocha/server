@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
 const User = require('../models/User');
@@ -6,7 +7,7 @@ const isLoggedIn = require('../middleware/isLoggedIn');
 /*const isProfileOwner = require('../middleware/isProfileOwner');
 */
 router.get('/user-detail/:userId', (req, res, next) => {
-
+  
   const { userId } = req.params
 
   User.findById(userId)
@@ -46,31 +47,36 @@ router.post('/user-update/:userId', /*isAuthenticated, isProfileOwner,*/ (req, r
 
 })
 
-router.post('/follow/:polId', isLoggedIn, async (req, res, next) => {
-  console.log('Followed someone')
-  /*try {
-
-      const { sockId, cartId, sockCost } = req.body
-
-      const toUpdate = await Cart.findById(cartId)
+router.post('/follow/:polId', isLoggedIn, (req, res, next) => {
+  const userId = req.body._id
+  const polId = req.params.polId;
   
-      toUpdate.subtotal += sockCost
-      toUpdate.total = toUpdate.subtotal * toUpdate.tax
-      toUpdate.socks.push(sockId)
-
-      const newCart = await toUpdate.save()
-  
-      const populated = await newCart.populate('socks')
-  
-          res.json(populated)
-
-  } catch (err) {
-      
-      res.redirect(307, '/cart/create')
-      console.log(err)
-      next(err)
-  }*/
-
+  User.findById(userId)
+  .then((userToEdit)=>{
+    const listFollowing = userToEdit.following.map((id)=>{return id.toString()});
+    listFollowing.push(polId);
+    userToEdit.following = [... new Set(listFollowing)].map((id)=>{return new mongoose.Types.ObjectId(id)});
+    return userToEdit.save()
+  })
+  .then((updatedUser)=>{
+    res.json(updatedUser)
+  })
+  .catch((err) => {
+    console.log(err)
+    next(err)})
 });
 
+router.get('/following',isLoggedIn, (req, res, next) => {
+  const userId = req.body._id
+  User.findById(userId)
+  .then((following)=>{
+    console.log('backend get ',following)
+    res.json(following)
+  })
+  .catch((err) => {
+    console.log(err)
+    next(err)
+})
+
+})
 module.exports = router;
