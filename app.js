@@ -2,12 +2,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 var mongoose = require('mongoose');
 var cors =require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth')
+var authRouter = require('./routes/auth');
+var politicianRouter = require('./routes/politician');
 
 var app = express();
 
@@ -22,7 +24,7 @@ app.enable('trust proxy');
 
 app.use(
     cors({
-      origin: [process.env.REACT_APP_URI]  // <== URL of our future React app
+      origin: [process.env.REACT_APP_URI]  
     })
   );
 
@@ -32,7 +34,8 @@ app.use(
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/auth',authRouter)
+app.use('/auth', authRouter);
+app.use('/politicians', politicianRouter);
 
 mongoose
   .connect(process.env.MONGODB_URI)

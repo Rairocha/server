@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 const User = require('../models/User');
-/*const isAuthenticated = require('../middleware/isAuthenticated');
-const isProfileOwner = require('../middleware/isProfileOwner');
+const isLoggedIn = require('../middleware/isLoggedIn');
+/*const isProfileOwner = require('../middleware/isProfileOwner');
 */
 router.get('/user-detail/:userId', (req, res, next) => {
 
@@ -46,5 +46,31 @@ router.post('/user-update/:userId', /*isAuthenticated, isProfileOwner,*/ (req, r
 
 })
 
+router.post('/follow/:polId', isLoggedIn, async (req, res, next) => {
+  console.log('Followed someone')
+  /*try {
+
+      const { sockId, cartId, sockCost } = req.body
+
+      const toUpdate = await Cart.findById(cartId)
+  
+      toUpdate.subtotal += sockCost
+      toUpdate.total = toUpdate.subtotal * toUpdate.tax
+      toUpdate.socks.push(sockId)
+
+      const newCart = await toUpdate.save()
+  
+      const populated = await newCart.populate('socks')
+  
+          res.json(populated)
+
+  } catch (err) {
+      
+      res.redirect(307, '/cart/create')
+      console.log(err)
+      next(err)
+  }*/
+
+});
 
 module.exports = router;
