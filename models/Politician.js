@@ -47,7 +47,9 @@ const politicianSchema = new Schema(
       lis_id: String,
       missed_votes_pct: Number,
       votes_with_party_pct: Number,
-      votes_against_party_pct: Number
+      votes_against_party_pct: Number,
+      most_recent_vote: String,
+      roles: [{type:Object}]
     }
   );
 
