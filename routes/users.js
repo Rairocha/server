@@ -6,7 +6,7 @@ const User = require('../models/User');
 const isLoggedIn = require('../middleware/isLoggedIn');
 /*const isProfileOwner = require('../middleware/isProfileOwner');
 */
-router.get('/user-detail/:userId', (req, res, next) => {
+router.get('/user-detail/:userId', isLoggedIn, (req, res, next) => {
   
   const { userId } = req.params
 
@@ -21,11 +21,11 @@ router.get('/user-detail/:userId', (req, res, next) => {
 
 });
 
-router.post('/user-update/:userId', /*isAuthenticated, isProfileOwner,*/ (req, res, next) => {
+router.post('/user-update/:userId', /*isLoggedIn, isProfileOwner,*/ (req, res, next) => {
 
   const { userId } = req.params
 
-  const { email, password, fullName, location, username } = req.body
+  const { email, password, fullName, username } = req.body
 
   User.findByIdAndUpdate(
     userId,
