@@ -14,7 +14,7 @@ const results  = async () => {
     try {
         const result = await Promise.all(promises)
         objUnique={}
-        result.map((r)=>r.data.results[0].members).flat().forEach((r)=>{objUnique[r.id+r.short_title]=r})
+        result.map((r)=>r.data.results[0].members).flat().forEach((r)=>{objUnique[r.id]=r})
         const politicians = await Politician.create(Object.values(objUnique)) 
     } catch (err) {
         console.log("Error creating politicians", err)
